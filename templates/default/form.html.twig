@@ -1,0 +1,101 @@
+{% extends 'base.html.twig' %}
+{% block title %}Etiketės{% endblock %}
+
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
+
+{% block body %}
+    <div class="container" style="background-color: white; border-radius: 3px; padding: 1em; margin-top: 6em">
+        {{ form(form) }}
+        <hr>
+        <a href="/" class="btn btn-danger btn-block btn-lg" role="button" style="margin-top: 5em">Grįžti atgal</a>
+        <button type="button" class="btn btn-primary btn-block btn-lg" data-toggle="modal" data-target="#myModal">Excel lentelės pildymo instrukcijos</button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Pildymo instrukcijos</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            Pirmoji (1) eilutė yra ignoruojama, tačiau rekomenduotina susirašyti reikšmes:
+                            <i>A1 - Kaina; B1 - Medžiaga; C1 - Sudėtis; D1 - Plotis; E1 - Šalis</i>
+                            <br><br>
+                            <b>Ir žemiau nuo antros eilutės pildyti sąrašą...</b>
+                            <br><br>
+                            <h3 style="text-align: center"><b>PAVYZDYS</b></h3>
+                        <table class="table table-sm">
+                            <thead>
+                            <tr>
+                                <th scope="col">A</th>
+                                <th scope="col">B</th>
+                                <th scope="col">C</th>
+                                <th scope="col">D</th>
+                                <th scope="col">E</th>
+                                <th scope="col">F</th>
+                                <th scope="col">G</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td><b>Kaina</b></td>
+                                <td><b>Medžiaga</b></td>
+                                <td><b>Sudėtis</b></td>
+                                <td><b>Ilgis/Plotis</b></td>
+                                <td><b>Šalis</b></td>
+                                <td><b>Info</b></td>
+                                <td><b>Simboliai</b></td>
+                            </tr>
+                            <tr>
+                                <td>5.11</td>
+                                <td>Dieninės užuolaidos</td>
+                                <td>Polesteris</td>
+                                <td>7i</td>
+                                <td>PL</td>
+                                <td>BK300</td>
+                                <td>a1b0c0d0</td>
+                            </tr>
+                            <tr>
+                                <td>7.11</td>
+                                <td>Naktinės užuolaidos</td>
+                                <td>Šifonas</td>
+                                <td>11p</td>
+                                <td>TR</td>
+                                <td>DK75</td>
+                                <td>a1b0c0d0</td>
+                            </tr>
+                            <tr>
+                                <td>2.11</td>
+                                <td>Naktinės užuolaidos</td>
+                                <td>Šifonas</td>
+                                <td>8a</td>
+                                <td>PL</td>
+                                <td>DK25</td>
+                                <td>a1b0c0d0</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button onclick="downloadSample()" class="btn btn-primary pull-left" data-dismiss="modal">Parsiųsti pavyzdinį failą</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Uždaryti instrukcijas</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        function downloadSample() {
+            location.href = "/download/sample";
+        }
+    </script>
+{% endblock %}

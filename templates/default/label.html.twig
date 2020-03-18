@@ -1,0 +1,173 @@
+{% extends 'base.html.twig' %}
+{% block title %}Etiketės{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="table-wrapper">
+            <div class="table-title">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <h2><b>Etikečių sąrašas</b></h2>
+                    </div>
+                    <div class="col-sm-8">
+                        {% if labels is defined and labels|length > 0 %}
+                        <a href="/generate/excel" class="btn btn-info"><i class="material-icons">&#xE24D;</i> <span>Generuoti ir parsiųsti</span></a>
+                        {% endif %}
+                        <a href="/import/excel" class="btn btn-info"><i class="material-icons">layers</i> <span>Importuoti į DB</span></a>
+                        <a href="/refresh" class="btn btn-success" data-toggle="tooltip" title="Įkelti iš naujo"><i class="material-icons" style="margin: 0">repeat</i></a>
+                        <button class="btn btn-success" data-toggle="modal" data-target="#symbolicCodes"><i class="material-icons" style="margin: 0">looks_one</i></button>
+                    </div>
+                </div>
+            </div>
+
+            <form action="/delselected">
+            {% if labels is defined and labels|length > 0 %}
+            <div class="table-filter">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <button type="submit" class="btn btn-danger" id="deleteSelected"><i class="material-icons">delete</i> <span>Trinti pažymėtus</span></button>
+                    </div>
+                </div>
+            </div>
+
+            <table class="table table-striped table-hover">
+                <thead>
+                <tr>
+                    <th><label for="cbox-all"><input type="checkbox" name="cbox-all" id="checkAll" value="null"></label></th>
+                    <th>Audinys</th>
+                    <th>Sudėtis</th>
+                    <th>Kaina</th>
+                    <th>Ilgis/Plotis/Aukštis</th>
+                    <th>Šalis</th>
+                    <th>Info</th>
+                    <th>Simbolių kodas</th>
+                    <th>Veiksmai</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                {% for label in labels %}
+                <tr>
+                    <td>
+                        <label for="cbox-item"><input type="checkbox" name="chbox{{ label.id }}" class="checkitem" id="cbox-item" value="{{ label.id }}"></label>
+                    </td>
+                    <td>
+                        {% if label.fabric is not defined or label.fabric is empty %}
+                            <i>Audinys nenurodytas</i>
+                        {% else %}
+                            {{ label.fabric }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if label.structure is not defined or label.structure is empty %}
+                            <i>Sudėtis nenurodyta</i>
+                        {% else %}
+                            {{ label.structure }}
+                        {% endif %}
+                    </td>
+                    <td>{{ label.price }} €</td>
+                    <td>{{ label.width }}</td>
+                    <td>{{ label.country }}</td>
+                    <td>{{ label.info }}</td>
+                    <td>{{ label.symbols }}</td>
+                    <td>
+                        <a href="/edit/{{ label.id }}" class="edit"><i class="material-icons" data-toggle="tooltip" title="Redaguoti">&#xE254;</i></a>
+                        <a href="/delete/{{ label.id }}" class="delete"><i class="material-icons" data-toggle="tooltip" title="Trinti">&#xE872;</i></a>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            </form>
+            {% else %}
+                <div class="container" style="text-align: center; margin: 0; width: inherit; padding: 80px">
+                    <h3 style="margin-left: 0">Nėra duomenų</h3>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="symbolicCodes" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Simbolių naudojimo instrukcijos</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            a - Lyginimas, b - Džiovinimas, c - Balinimas, d - Skalbimas<br>
+                            <br><br>
+                            <b>a0 -</b> lyginti negalima <img src="{{ asset('icons/iron_0.png') }}" alt="Lyginti negalima" height="32" width="32">
+                            <b>a1 -</b> lyginti galima <img src="{{ asset('icons/iron_1.png') }}" alt="Lyginti galima" height="32" width="32">
+                            <br>
+                            <b>b0 -</b> džiovinti negalima <img src="{{ asset('icons/dry_0.png') }}" alt="Džiovinti negalima" height="32" width="32">
+                            <b>b1 -</b> džiovinti galima <img src="{{ asset('icons/dry_1.png') }}" alt="Džiovinti galima" height="32" width="32">
+                            <br>
+                            <b>c0 -</b> balinti negalima <img src="{{ asset('icons/bleach_0.png') }}" alt="Balinti negalima" height="32" width="32">
+                            <b>c1 -</b> balinti galima <img src="{{ asset('icons/bleach_1.png') }}" alt="Balinti galima" height="32" width="32">
+                            <br>
+                            <b>d0 -</b> skalbti negalima <img src="{{ asset('icons/wash_0.png') }}" alt="Skalbti negalima" height="32" width="32">
+                            <b>d1 -</b> skalbti galima <img src="{{ asset('icons/wash_1.png') }}" alt="Skalbti galima" height="32" width="32">
+                            <br><br>
+                            <h4>Pavyzdys:</h4><br>
+                            <i>a1b0c0d0</i><br>
+                            <h4>Rezultatas:</h4>
+                            <img src="{{ asset('icons/iron_1.png') }}" alt="Lyginti galima" height="22" width="22">
+                            <img src="{{ asset('icons/dry_0.png') }}" alt="Džiovinti negalima" height="22" width="22">
+                            <img src="{{ asset('icons/bleach_0.png') }}" alt="Balinti negalima" height="22" width="22">
+                            <img src="{{ asset('icons/wash_0.png') }}" alt="Skalbti negalima" height="22" width="22">
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Uždaryti instrukcijas</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <i class="material-icons" style="margin: 0; color: black">person</i><br>
+        Programos autorius<br>
+        Rokas Paulikas
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('[data-toggle="tooltip"]').tooltip();
+
+        $('#checkAll').click(function () {
+            $('input:checkbox').not(this).prop('checked', this.checked);
+        });
+
+        $("#deleteSelected").click(function () {
+            let ids = $( "input:checked" )
+                .map(function() {
+                    return this.value;
+                })
+                .get()
+                .join();
+
+            console.log(ids);
+        });
+    });
+</script>
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('labelViewPage.css') }}">
+    <style>
+        .footer{
+            text-align: center;
+            font-size: 8pt;
+            margin-top: 3em;
+            color: gray;
+        }
+    </style>
+{% endblock %}

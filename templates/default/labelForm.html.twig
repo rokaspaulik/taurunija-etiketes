@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+{% block title %}Etiketės{% endblock %}
+
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
+
+{% block body %}
+    <div class="container" style="background-color: white; border-radius: 3px; padding: 1em; margin-top: 6em">
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        {{ form_end(form) }}
+        <hr>
+        <a href="/" class="btn btn-danger btn-block btn-lg" role="button" style="margin-top: 5em">Grįžti atgal</a>
+    </div>
+{% endblock %}
